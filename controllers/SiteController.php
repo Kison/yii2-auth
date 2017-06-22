@@ -10,11 +10,11 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends Controller
-{
-    /**
-     * @inheritdoc
-     */
+class SiteController extends Controller {
+
+    public $defaultAction = 'login';
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
@@ -55,24 +55,12 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
      * Login action.
-     *
      * @return Response|string
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->actionCongrats();
         }
 
         $model = new LoginForm();
@@ -84,43 +72,24 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
 
     /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
+     * Displays home page|login page
      * @return string
      */
-    public function actionAbout()
-    {
-        return $this->render('about');
+    public function actionCongrats() {
+        if (Yii::$app->getUser()->isGuest) {
+            $this->actionLogin();
+        }
+        return $this->render('congrats');
+    }
+
+    /**
+     * Logout action
+     * @return Response
+     */
+    public function actionLogout() {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 }
