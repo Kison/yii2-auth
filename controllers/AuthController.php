@@ -8,15 +8,14 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
 
-class SiteController extends Controller {
+class AuthController extends Controller {
 
     public $defaultAction = 'login';
+    public $layout = 'auth';
 
     /** @inheritdoc */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -38,15 +37,9 @@ class SiteController extends Controller {
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
+    /** @inheritdoc */
+    public function actions() {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -59,29 +52,21 @@ class SiteController extends Controller {
      * @return Response|string
      */
     public function actionLogin() {
-        if (!Yii::$app->user->isGuest) {
-            return $this->actionCongrats();
-        }
-
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
         return $this->render('login', [
             'model' => $model,
         ]);
     }
 
-
     /**
-     * Displays home page|login page
-     * @return string
+     * Register action.
+     * @return Response|string
      */
-    public function actionCongrats() {
-        if (Yii::$app->getUser()->isGuest) {
-            $this->actionLogin();
-        }
-        return $this->render('congrats');
+    public function actionRegister() {
+        $model = new LoginForm();
+        return $this->render('register', [
+            'model' => $model
+        ]);
     }
 
     /**

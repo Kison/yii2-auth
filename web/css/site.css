@@ -113,3 +113,26 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.auth-border {
+    border-radius: 0;
+    border: 1px solid #ccc !important;
+}
+
+.text-gray {color: #ccc !important;}
+.text-black {color: #000 !important;}
+
+.no-back {
+    background: none;
+}
+
+.mt-10px {
+    margin-top: 10px;
+}
+
+@media (max-width: 1024px) {
+    .mb-10px-width-less-then-1024px {
+        margin-bottom: 10px;
+    }
+}
+
