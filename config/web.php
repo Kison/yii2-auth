@@ -10,26 +10,18 @@ $config = [
     'defaultRoute' => 'main/congrats',
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'gwKn_CjPz-hwqLZd1paiRbzsGBsSnS6R',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass'     => 'app\models\User',
+            'identityClass'     => \app\models\UserRow::class,
             'enableAutoLogin'   => true,
             'loginUrl'          => ['auth/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'main/error',
-        ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -48,7 +40,7 @@ $config = [
                 'login'     => 'auth/login',
                 'register'  => 'auth/register'
             ],
-        ],
+        ]
     ],
     'params' => $params,
 ];
