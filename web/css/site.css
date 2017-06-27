@@ -122,13 +122,10 @@ a.desc:after {
 .text-gray {color: #ccc !important;}
 .text-black {color: #000 !important;}
 
-.no-back {
-    background: none;
-}
+.no-back {background: none;}
 
-.mt-10px {
-    margin-top: 10px;
-}
+.mt-10px {margin-top: 10px;}
+.mt0px {margin-top: 0;}
 
 @media (max-width: 1024px) {
     .mb-10px-width-less-then-1024px {

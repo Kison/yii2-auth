@@ -11,6 +11,8 @@ use rmrevin\yii\fontawesome\FA;
 ?>
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
+
+
         <?php $form = ActiveForm::begin([
             'id'    => 'authentication-form',
             'options' => [
@@ -18,6 +20,7 @@ use rmrevin\yii\fontawesome\FA;
             ]
         ]); ?>
 
+        <h1 class="mt0px">Sign in</h1>
         <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'class' => 'form-control input-lg auth-border', 'placeholder' => 'Email'])->label(false) ?>
         <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password', 'class' => 'form-control input-lg auth-border'])->label(false) ?>
 

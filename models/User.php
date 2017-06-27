@@ -26,8 +26,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface {
             'accessToken' => '101-token',
         ],
     ];
-
-
+    
     /** @inheritdoc */
     public static function findIdentity($id) {
         return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
@@ -40,7 +39,6 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface {
                 return new static($user);
             }
         }
-
         return null;
     }
 

@@ -18,6 +18,7 @@ use rmrevin\yii\fontawesome\FA;
             ]
         ]); ?>
 
+        <h1 class="mt0px">Sign up</h1>
         <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'class' => 'form-control input-lg auth-border', 'placeholder' => 'Email'])->label(false) ?>
         <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password', 'class' => 'form-control input-lg auth-border'])->label(false) ?>
 
