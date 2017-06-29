@@ -10,7 +10,7 @@ class m170628_115718_create_email_auth_table extends Migration {
         $this->createTable('email_auth', [
             'user_id'                   => $this->integer()->unique(),
             'user_email'                => $this->string(50),
-            'user_password_hash'        => $this->string(50),
+            'user_password_hash'        => $this->string(255),
         ]);
 
         $this->addForeignKey(

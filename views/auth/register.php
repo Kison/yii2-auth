@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\LoginForm */
+/* @var $model app\models\RegisterForm */
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -24,7 +24,7 @@ use rmrevin\yii\fontawesome\FA;
 
         <div class="row">
             <div class="col-md-12 mb-10px-width-less-then-1024px">
-                <?= Html::button('Sign up', ['class' => 'btn btn-lg btn-default btn-block auth-border', 'name' => 'sign-up-button']) ?>
+                <?= Html::submitButton('Sign up', ['class' => 'btn btn-lg btn-default btn-block auth-border', 'name' => 'sign-up-button']) ?>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

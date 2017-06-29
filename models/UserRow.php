@@ -2,14 +2,16 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * Class UserRow, represents user
  * @author Denis Kison
  * @date 27.06.2017
  */
-class UserRow extends ActiveRecord implements \yii\web\IdentityInterface {
+class UserRow extends ActiveRecord implements IdentityInterface {
 
     const AUTH_FACEBOOK = 'facebook';
     const AUTH_TWITTER = 'twitter';
@@ -17,7 +19,6 @@ class UserRow extends ActiveRecord implements \yii\web\IdentityInterface {
     const AUTH_EMAIL = 'email';
 
     public $id;
-    public $email;
     public $login_method;
     public $auth_key;
     public $access_token;
@@ -58,11 +59,20 @@ class UserRow extends ActiveRecord implements \yii\web\IdentityInterface {
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
                 $this->auth_key = \Yii::$app->security->generateRandomString();
+                $this->access_token = \Yii::$app->security->generateRandomString();
             }
             return true;
         }
         return false;
-}
+    }
+
+    /** @return \yii\db\ActiveQuery */
+    public function getAuth() {
+        if ($this->login_method == self::AUTH_EMAIL) {
+            return $this->hasOne(EmailAuthRow::className(), ['user_id' => 'id']);
+        }
+        return $this->hasOne(FirebaseAuthRow::className(), ['user_id' => 'id']);
+    }
 
     /**
      * Validates password
@@ -70,7 +80,8 @@ class UserRow extends ActiveRecord implements \yii\web\IdentityInterface {
      * @return bool if password provided is valid for current user
      */
     public function validatePassword($password) {
-        /**TODO: Passwords in another table */
-        return $this->password === $password;
+        /**@var $auth EmailAuthRow */
+        return ($auth = EmailAuthRow::findOne(['user_id' => $this->id]) &&
+            Yii::$app->getSecurity()->validatePassword($password, $auth->user_password_hash));
     }
 }

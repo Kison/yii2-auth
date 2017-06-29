@@ -1,9 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\models\forms;
 
 use Yii;
 use yii\base\Model;
+use app\models\UserRow;
 
 /**
  * LoginForm is the model behind the login form.
@@ -57,7 +58,7 @@ class LoginForm extends Model {
 
     /**
      * Finds user by [[username]]
-     * @return User|null
+     * @return UserRow|null
      */
     public function getUser() {
         if ($this->_user === false) {

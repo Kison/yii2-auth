@@ -2,12 +2,13 @@
 
 namespace app\controllers;
 
-use Yii;
+
+use yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\forms\{LoginForm, RegisterForm};
 
 class AuthController extends Controller {
 
@@ -63,7 +64,15 @@ class AuthController extends Controller {
      * @return Response|string
      */
     public function actionRegister() {
-        $model = new LoginForm();
+        $model = new RegisterForm();
+
+        if ($model->load(Yii::$app->request->post()) &&
+            $model->validate() &&
+            $model->register()) {
+
+            $this->redirect('main/congrats');
+        }
+
         return $this->render('register', [
             'model' => $model
         ]);

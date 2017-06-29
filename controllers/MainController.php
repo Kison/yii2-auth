@@ -20,7 +20,7 @@ class MainController extends Controller {
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                ],
+                ]
             ]
         ];
     }
