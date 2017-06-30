@@ -7,6 +7,9 @@ use yii\validators\Validator;
  * Validates password strength
  * @author Denis Kison
  * @date 28.06.2017
+ *
+ * TODO: Need to implement supporting of cyrillic chars
+ *
  */
 class PasswordStrength extends Validator {
 

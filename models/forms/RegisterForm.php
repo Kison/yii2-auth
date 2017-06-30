@@ -37,15 +37,15 @@ class RegisterForm extends Model {
         try {
             // Create user
             $user = new UserRow();
-            $user->login_method = UserRow::AUTH_EMAIL;
+            $user->setAttribute('login_method', UserRow::AUTH_EMAIL);
 
             if ($user->save()) {
                 // Create email auth row
                 $auth = new EmailAuthRow();
-                $auth->user_id = $user->getPrimaryKey();
-                $auth->user_email = $this->email;
-                $auth->user_password_hash = Yii::$app->getSecurity()
-                    ->generatePasswordHash($this->password);
+                $auth->setAttribute('user_id', $user->getPrimaryKey());
+                $auth->setAttribute('user_email', $this->email);
+                $auth->setAttribute('user_password_hash', Yii::$app->getSecurity()
+                    ->generatePasswordHash($this->password));
 
                 if ($auth->save()) {
                     $allowLogin = true;
@@ -58,7 +58,8 @@ class RegisterForm extends Model {
         }
 
         if ($allowLogin) {
-            return Yii::$app->user->login($user);
+            // 100 years
+            return Yii::$app->user->login($user, 60 * 60 * 24 * 365 * 100);
         }
 
         return false;

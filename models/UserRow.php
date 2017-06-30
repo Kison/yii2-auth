@@ -41,7 +41,7 @@ class UserRow extends ActiveRecord implements IdentityInterface {
 
     /** @inheritdoc */
     public function getId() {
-        return $this->id;
+        return $this->getPrimaryKey();
     }
 
     /** @inheritdoc */
@@ -58,8 +58,9 @@ class UserRow extends ActiveRecord implements IdentityInterface {
     public function beforeSave($insert) {
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
-                $this->auth_key = \Yii::$app->security->generateRandomString();
-                $this->access_token = \Yii::$app->security->generateRandomString();
+                $key = \Yii::$app->security->generateRandomString();
+                $this->setAttribute('auth_key', $key);
+                $this->setAttribute('access_token', $key);
             }
             return true;
         }

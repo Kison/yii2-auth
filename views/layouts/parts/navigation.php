@@ -23,9 +23,9 @@
 
     if (!Yii::$app->user->isGuest) {
         $items[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
+            . Html::beginForm(['/auth/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->getId() . ')',
+                'Logout',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
