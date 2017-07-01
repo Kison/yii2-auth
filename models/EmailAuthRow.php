@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\query\EmailAuthQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -34,4 +35,10 @@ class EmailAuthRow extends ActiveRecord {
     public function getUser() {
         return $this->hasOne(UserRow::className(), ['id' => 'user_id']);
     }
+
+    /** @return EmailAuthQuery */
+    public static function find() {
+        return new EmailAuthQuery(get_called_class());
+    }
+
 }

@@ -54,6 +54,11 @@ class AuthController extends Controller {
      */
     public function actionLogin() {
         $model = new LoginForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->redirect('main/congrats');;
+        }
+
         return $this->render('login', [
             'model' => $model,
         ]);
@@ -69,7 +74,6 @@ class AuthController extends Controller {
         if ($model->load(Yii::$app->request->post()) &&
             $model->validate() &&
             $model->register()) {
-
             $this->redirect('main/congrats');
         }
 

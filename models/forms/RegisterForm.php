@@ -59,7 +59,7 @@ class RegisterForm extends Model {
 
         if ($allowLogin) {
             // 100 years
-            return Yii::$app->user->login($user, 60 * 60 * 24 * 365 * 100);
+            return Yii::$app->user->login($user, UserRow::LOGIN_LIVE);
         }
 
         return false;

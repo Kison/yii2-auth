@@ -38,7 +38,8 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'login'     => 'auth/login',
-                'register'  => 'auth/register'
+                'register'  => 'auth/register',
+                'congrats'  => 'main/congrats'
             ],
         ]
     ],

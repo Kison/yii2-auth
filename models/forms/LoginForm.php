@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use Yii;
+use app\models\EmailAuthRow;
 use yii\base\Model;
 use app\models\UserRow;
 
@@ -21,10 +22,9 @@ class LoginForm extends Model {
      */
     public function rules() {
         return [
-            // username and password are both required
             [['email', 'password'], 'required'],
             [['email'], 'email'],
-            // password is validated by validatePassword()
+            [['email'], 'exist', 'targetClass' => EmailAuthRow::className(), 'targetAttribute' => 'user_email', 'message' => 'Incorrect username or password.'],
             ['password', 'validatePassword'],
         ];
     }
@@ -51,7 +51,7 @@ class LoginForm extends Model {
      */
     public function login() {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser());
+            return Yii::$app->user->login($this->getUser(), UserRow::LOGIN_LIVE);
         }
         return false;
     }
@@ -62,7 +62,11 @@ class LoginForm extends Model {
      */
     public function getUser() {
         if ($this->_user === false) {
-            $this->_user = UserRow::findByUsername($this->username);
+            $this->_user = EmailAuthRow::find()
+                ->email($this->email)
+                ->one()
+                ->getUser()
+                ->one();
         }
         return $this->_user;
     }
