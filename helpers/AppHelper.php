@@ -3,6 +3,7 @@
 namespace app\helpers;
 
 use Yii;
+use app\components\firebase\FirebaseConfigComponent;
 
 class AppHelper {
 
@@ -24,6 +25,11 @@ class AppHelper {
             $action->id == $actionName &&
             ($moduleName == $module || $moduleName == '*')
         );
+    }
+
+    /** @return FirebaseConfigComponent */
+    public static function getFirebase() {
+        return Yii::$app->firebase;
     }
 
 }

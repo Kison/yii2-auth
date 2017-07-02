@@ -1,7 +1,10 @@
 <?php
+use app\components\firebase\FirebaseConfigComponent;
+use app\models\UserRow;
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
+$routes = require(__DIR__ . './routes.php');
 
 $config = [
     'id' => 'basic',
@@ -12,11 +15,20 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'gwKn_CjPz-hwqLZd1paiRbzsGBsSnS6R',
         ],
+        'firebase' => [
+            'class'             => FirebaseConfigComponent::class,
+            'apiKey'            => "AIzaSyAexcG2bWWH1p0Szmu0OSWn50iZ1aHfrgY",
+            'authDomain'        => "yii2-auth-3705f.firebaseapp.com",
+            'databaseURL'       => "https://yii2-auth-3705f.firebaseio.com",
+            'projectId'         => "yii2-auth-3705f",
+            'storageBucket'     => "yii2-auth-3705f.appspot.com",
+            'messagingSenderId' => "989380390592"
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass'     => \app\models\UserRow::class,
+            'identityClass'     => UserRow::class,
             'enableAutoLogin'   => true,
             'loginUrl'          => ['auth/login'],
         ],
@@ -32,15 +44,11 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-                'login'     => 'auth/login',
-                'register'  => 'auth/register',
-                'congrats'  => 'main/congrats'
-            ],
+        'db'            => $db,
+        'urlManager'    => [
+            'enablePrettyUrl'   => true,
+            'showScriptName'    => false,
+            'rules'             => $routes,
         ]
     ],
     'params' => $params,

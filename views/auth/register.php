@@ -31,6 +31,7 @@ use rmrevin\yii\fontawesome\FA;
     </div>
 </div>
 
+<?php \app\components\firebase\FirebaseAuthWidget::widget()?>
 <div class="row">
     <div class="col-md-2 col-md-offset-3 mb-10px-width-less-then-1024px">
         <?= Html::button(FA::i('facebook'), [
