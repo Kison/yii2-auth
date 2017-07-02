@@ -1,14 +1,20 @@
 <?php
-
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\RegisterForm */
-
+use app\components\firebase\FirebaseAuthWidget;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
+use app\components\firebase\providers\{FirebaseFacebookAuthProvider, FirebaseTwitterAuthProvider};
+use app\components\firebase\FirebaseWidget;
 
+
+/**
+ * @var $this yii\web\View
+ * @var $form yii\bootstrap\ActiveForm
+ * @var $model app\models\forms\RegisterForm
+ */
+$this->title = 'Sign up'
 ?>
+
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <?php $form = ActiveForm::begin([
@@ -31,12 +37,32 @@ use rmrevin\yii\fontawesome\FA;
     </div>
 </div>
 
-<?php \app\components\firebase\FirebaseAuthWidget::widget()?>
+
+<?php
+    // Initialize firebase
+    FirebaseWidget::widget();
+
+    // Facebook auth
+    FirebaseAuthWidget::widget([
+        'provider'          => new FirebaseFacebookAuthProvider(),
+        'buttonSelector'    => '[name=\"facebook-sign-up-button\"]',
+        'action'            => FirebaseAuthWidget::ACTION_REGISTER
+    ]);
+
+    // Twitter auth
+    FirebaseAuthWidget::widget([
+        'provider'          => new FirebaseTwitterAuthProvider(),
+        'buttonSelector'    => '[name=\"twitter-sign-up-button\"]',
+        'action'            => FirebaseAuthWidget::ACTION_REGISTER
+    ]);
+?>
+
+
 <div class="row">
     <div class="col-md-2 col-md-offset-3 mb-10px-width-less-then-1024px">
         <?= Html::button(FA::i('facebook'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'facebook-sign-up-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign up with Facebook'
@@ -46,7 +72,7 @@ use rmrevin\yii\fontawesome\FA;
     <div class="col-md-2 mb-10px-width-less-then-1024px">
         <?= Html::button(FA::i('twitter'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'twitter-sign-up-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign up with Twitter'
@@ -56,7 +82,7 @@ use rmrevin\yii\fontawesome\FA;
     <div class="col-md-2">
         <?= Html::button(FA::i('phone'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'phone-sign-up-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign up with Phone'

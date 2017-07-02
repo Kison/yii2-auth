@@ -16,5 +16,6 @@ class FirebaseAsset extends AssetBundle {
 
     public $js = [
         '//www.gstatic.com/firebasejs/4.1.3/firebase.js',
+        'js/firebase.js'
     ];
 }

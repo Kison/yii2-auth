@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
-
+$this->title = 'Sign in'
 ?>
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
