@@ -5,6 +5,7 @@ use app\models\auth\UserRow;
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
 $routes = require(__DIR__ . './routes.php');
+$firebase = require(__DIR__ . './firebase.php');
 
 $config = [
     'id' => 'basic',
@@ -15,15 +16,7 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'gwKn_CjPz-hwqLZd1paiRbzsGBsSnS6R',
         ],
-        'firebase' => [
-            'class'             => FirebaseConfigComponent::class,
-            'apiKey'            => "AIzaSyAexcG2bWWH1p0Szmu0OSWn50iZ1aHfrgY",
-            'authDomain'        => "yii2-auth-3705f.firebaseapp.com",
-            'databaseURL'       => "https://yii2-auth-3705f.firebaseio.com",
-            'projectId'         => "yii2-auth-3705f",
-            'storageBucket'     => "yii2-auth-3705f.appspot.com",
-            'messagingSenderId' => "989380390592"
-        ],
+        'firebase' => $firebase,
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

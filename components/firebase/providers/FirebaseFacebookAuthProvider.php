@@ -17,10 +17,6 @@ class FirebaseFacebookAuthProvider extends FirebaseAuthProvider {
         return <<<CODE
         var provider = new firebase.auth.FacebookAuthProvider(),
             providerName = "{$this->getName()}";
-          
-        provider.setCustomParameters({
-            'display' : 'popup'
-        });
 CODE;
     }
 

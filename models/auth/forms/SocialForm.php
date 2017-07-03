@@ -76,8 +76,6 @@ class SocialForm extends Model {
 
             }
 
-
-
             $transaction->commit();
         } catch(\Exception $e) {
             $transaction->rollback();

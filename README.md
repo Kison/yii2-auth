@@ -17,7 +17,8 @@ Features
 Set up on local machine 
 ----------------------
 1. Make file **```config/db.php```** from **```config/db.example.php```**
-2. Run  **```composer install```** from project root folder
-3. Run  **```php yii migrate```** from project root folder
+2. Make file **```config/firebase.php```** from **```config/firebase.example.php```**
+3. Run  **```composer install```** from project root folder
+4. Run  **```php yii migrate```** from project root folder
    
 
