@@ -58,6 +58,11 @@ class UserRow extends ActiveRecord implements IdentityInterface {
         return new UserQuery(get_called_class());
     }
 
+    /** @return \yii\db\ActiveQuery|FirebaseRow */
+    public function getFirebaseRow() {
+        return $this->hasOne(FirebaseRow::className(), ['id' => 'user_id']);
+    }
+
     /**
      * Validates password
      * @param string $password password to validate

@@ -10,7 +10,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\auth\forms\{LoginForm, RegisterForm};
 
-class AuthController extends Controller {
+class AuthController extends BaseAuthController {
 
     public $defaultAction = 'login';
     public $layout = 'auth';

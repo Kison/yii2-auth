@@ -1,16 +1,21 @@
 function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
     firebase.auth().signInWithPopup(provider).then(function(result) {
         console.log(result);
+
+        var params = {
+            'via' : providerName,
+            'firebase_access_token'      : result.credential.accessToken,
+            'firebase_user_id'           : result.user.uid,
+            'user_email'                 : result.user.email,
+            'user_name'                  : result.user.displayName
+        };
+
+        $.post('firebase/social', params, function(data) {
+            console.log(data);
+        });
+
         if (typeof(onSuccess) === 'function') {
             onSuccess(result);
-
-            var params = {
-                'via' : providerName
-            };
-
-            $.post('firebase/auth', params, function(data) {
-                console.log(data);
-            });
         }
     }).catch(function(error) {
         if (typeof(onFail) === 'function') {

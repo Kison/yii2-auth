@@ -1,27 +1,33 @@
 <?php
 
-namespace app\models;
+namespace app\models\auth\forms;
 
 use Yii;
 use yii\base\Model;
 use app\models\auth\{
-    UserRow, UserEmailRow
+    FirebaseRow, UserNameRow, UserRow, UserEmailRow
 };
 
 /**
- * This is the model class for table "firebase_auth".
- * @property string $via
- * @property string $user_email
- * @property string $user_name
- * @property string $firebase_user_id
- * @property string $firebase_access_token
+ * Firebase social authentication form
  */
 class SocialForm extends Model {
+
+    /** @var string */
+    public $via;
+    /** @var string */
+    public $user_email;
+    /** @var string */
+    public $user_name;
+    /** @var string */
+    public $firebase_user_id;
+    /** @var string */
+    public $firebase_access_token;
 
     /** @inheritdoc */
     public function rules() {
         return [
-            [['via', 'user_email', 'user_name', 'firebase_user_id', 'firebase_access_token'], 'required'],
+            [['via', 'user_name', 'firebase_user_id', 'firebase_access_token'], 'required'],
             [['via'], 'in', 'range' => [UserRow::AUTH_FACEBOOK, UserRow::AUTH_TWITTER, UserRow::AUTH_PHONE]],
             [['user_email'], 'email'],
             [['user_email'], 'string', 'max' => 50],
@@ -36,24 +42,35 @@ class SocialForm extends Model {
     public function authenticate() {
         $transaction = Yii::$app->db->beginTransaction();
 
-        $allowLogin = false;
+        $user = null;
         try {
 
-            // Checks if user exists
-            if ($email = UserEmailRow::find()->email($this->user_email)->one()) {
+            // Checks whether user with such email exists or not
+            if (($this->user_email && ($email = UserEmailRow::find()->email($this->user_email)->one())) ||
+                ($name = UserNameRow::findOne(['user_name' => $this->user_name, 'provider' => $this->via]))) {
                 /**@var UserEmailRow $email */
 
                 // Change auth type in user table
                 $user = $email->getUser();
                 $user->setAttribute('login_method', $this->via);
                 if ($user->save(false, ['login_method'])) {
-                    // Change firebase related data
 
-                    // TODO: Need to finish
+                    // Check whether firebase data exists
+                    if ($firebase = $user->getFirebaseRow()) {
+                        // Update firebase related columns
+                        $firebase->setAttribute('firebase_user_id', $this->firebase_user_id);
+                        $firebase->setAttribute('firebase_access_token', $this->firebase_access_token);
+                        $firebase->save(false, ['firebase_user_id', 'firebase_access_token']);
+                    } else {
+                        // Create new record in table
+                        $firebase = new FirebaseRow();
+                        $firebase->setAttribute('user_id', $user->getPrimaryKey());
+                        $firebase->setAttribute('firebase_user_id', $this->firebase_user_id);
+                        $firebase->setAttribute('firebase_access_token', $this->firebase_access_token);
+                        $firebase->save(false);
+                    }
 
                 }
-
-
             } else {
 
                 // Create user
@@ -61,19 +78,28 @@ class SocialForm extends Model {
                 $user->setAttribute('login_method', $this->via);
 
                 if ($user->save()) {
-                    // Create email auth row
-                    $auth = new UserEmailRow();
-                    $auth->setAttribute('user_id', $user->getPrimaryKey());
-                    $auth->setAttribute('user_email', $this->email);
-                    $auth->setAttribute('user_password_hash', Yii::$app->getSecurity()
-                        ->generatePasswordHash($this->password));
-
-                    if ($auth->save()) {
-                        $allowLogin = true;
+                    if ($this->user_email) {
+                        // Create email auth row
+                        $email = new UserEmailRow();
+                        $email->setAttribute('user_id', $user->getPrimaryKey());
+                        $email->setAttribute('user_email', $this->user_email);
+                        $email->save(false);
                     }
+
+                    // Create email auth row
+                    $name = new UserNameRow();
+                    $name->setAttribute('user_id', $user->getPrimaryKey());
+                    $name->setAttribute('user_name', $this->user_name);
+                    $name->setAttribute('provider', $this->via);
+                    $name->save(false);
+
+                    // Create new firebase record
+                    $firebase = new FirebaseRow();
+                    $firebase->setAttribute('user_id', $user->getPrimaryKey());
+                    $firebase->setAttribute('firebase_user_id', $this->firebase_user_id);
+                    $firebase->setAttribute('firebase_access_token', $this->firebase_access_token);
+                    $firebase->save(false);
                 }
-
-
             }
 
             $transaction->commit();
@@ -81,16 +107,11 @@ class SocialForm extends Model {
             $transaction->rollback();
         }
 
-        if ($allowLogin) {
+        if ($user instanceof UserRow) {
             // 100 years
             return Yii::$app->user->login($user, UserRow::LOGIN_LIVE);
         }
 
         return false;
-    }
-
-    /** @return \yii\db\ActiveQuery */
-    public function getUser() {
-        return $this->hasOne(UserRow::className(), ['id' => 'user_id']);
     }
 }
