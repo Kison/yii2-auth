@@ -14,4 +14,10 @@ abstract class FirebaseAuthProvider {
      * @return string
      */
     abstract public function getCode();
+
+    /**
+     * Returns provider name
+     * @return string
+     */
+    abstract public function getName();
 }

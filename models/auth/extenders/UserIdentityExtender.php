@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\extenders;
+namespace app\models\auth\extenders;
 
 use yii\web\IdentityInterface;
 

@@ -8,7 +8,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\forms\{LoginForm, RegisterForm};
+use app\models\auth\forms\{LoginForm, RegisterForm};
 
 class AuthController extends Controller {
 
@@ -71,14 +71,20 @@ class AuthController extends Controller {
     public function actionRegister() {
         $model = new RegisterForm();
 
-        if ($model->load(Yii::$app->request->post()) &&
-            $model->validate() &&
-            $model->register()) {
-            $this->redirect('main/congrats');
+        // TODO: Unknown error processing
+        $unknownError = false;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->register()) {
+                $this->redirect('main/congrats');
+            } else {
+                $unknownError = true;
+            }
         }
 
         return $this->render('register', [
-            'model' => $model
+            'model'         => $model,
+            'unknownError'  => $unknownError
         ]);
     }
 

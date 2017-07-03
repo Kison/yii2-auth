@@ -1,18 +1,18 @@
 <?php
-use app\components\firebase\FirebaseAuthWidget;
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use rmrevin\yii\fontawesome\FA;
-use app\components\firebase\providers\{FirebaseFacebookAuthProvider, FirebaseTwitterAuthProvider};
-use app\components\firebase\FirebaseWidget;
+    use app\components\firebase\FirebaseAuthWidget;
+    use yii\helpers\Html;
+    use yii\bootstrap\ActiveForm;
+    use rmrevin\yii\fontawesome\FA;
+    use app\components\firebase\providers\{FirebaseFacebookAuthProvider, FirebaseTwitterAuthProvider};
+    use app\components\firebase\FirebaseWidget;
 
+    /**
+     * @var $this yii\web\View
+     * @var $form yii\bootstrap\ActiveForm
+     * @var $model app\models\auth\forms\RegisterForm
+     */
 
-/**
- * @var $this yii\web\View
- * @var $form yii\bootstrap\ActiveForm
- * @var $model app\models\forms\RegisterForm
- */
-$this->title = 'Sign up'
+    $this->title = 'Sign up'
 ?>
 
 <div class="row">

@@ -39,7 +39,7 @@ class FirebaseAuthWidget extends Widget {
         $scripts = <<<FIREBASE
             $('{$this->buttonSelector}').on('click', function() {
                 {$this->provider->getCode()}
-                firebaseAuthentication(provider);
+                firebaseAuthentication(provider, providerName);
             });                        
 FIREBASE;
 

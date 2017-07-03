@@ -15,7 +15,16 @@ class FirebaseTwitterAuthProvider extends FirebaseAuthProvider  {
      */
     public function getCode() {
         return <<<CODE
-        var provider = new firebase.auth.TwitterAuthProvider();   
+        var provider = new firebase.auth.TwitterAuthProvider(),
+            providerName = "{$this->getName()}";
 CODE;
+    }
+
+    /**
+     * Returns provider name
+     * @return string
+     */
+    public function getName() {
+        return 'twitter';
     }
 }

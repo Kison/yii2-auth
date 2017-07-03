@@ -1,12 +1,12 @@
 <?php
 
-namespace app\models;
+namespace app\models\auth;
 
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use app\models\query\UserQuery;
-use app\models\extenders\UserIdentityExtender;
+use app\models\auth\query\UserQuery;
+use app\models\auth\extenders\UserIdentityExtender;
 
 /**
  * Class UserRow, represents user
@@ -53,14 +53,6 @@ class UserRow extends ActiveRecord implements IdentityInterface {
         return false;
     }
 
-    /** @return \yii\db\ActiveQuery */
-    public function getAuth() {
-        if ($this->login_method == self::AUTH_EMAIL) {
-            return $this->hasOne(EmailAuthRow::className(), ['user_id' => 'id']);
-        }
-        return $this->hasOne(FirebaseAuthRow::className(), ['user_id' => 'id']);
-    }
-
     /** @return UserQuery */
     public static function find() {
         return new UserQuery(get_called_class());
@@ -72,8 +64,8 @@ class UserRow extends ActiveRecord implements IdentityInterface {
      * @return bool if password provided is valid for current user
      */
     public function validatePassword($password) {
-        /**@var $auth EmailAuthRow */
-        return (($auth = EmailAuthRow::findOne(['user_id' => $this->getPrimaryKey()])) &&
-            Yii::$app->getSecurity()->validatePassword($password, $auth->getAttribute('user_password_hash')));
+        /**@var $model UserPasswordRow */
+        return (($model = UserPasswordRow::findOne(['user_id' => $this->getPrimaryKey()])) &&
+            Yii::$app->getSecurity()->validatePassword($password, $model->getAttribute('user_password_hash')));
     }
 }

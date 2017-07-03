@@ -1,14 +1,14 @@
 <?php
-namespace app\models\query;
+namespace app\models\auth\query;
 
 use yii\db\ActiveQuery;
 
 /**
- * Class EmailAuthQuery
+ * Class UserEmailQuery
  * @author Denis Kison
  * @date 01.07.2017
  */
-class EmailAuthQuery extends ActiveQuery {
+class UserEmailQuery extends ActiveQuery {
 
     /**
      * Add where condition for email field

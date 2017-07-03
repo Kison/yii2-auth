@@ -1,6 +1,6 @@
 <?php
 use app\components\firebase\FirebaseConfigComponent;
-use app\models\UserRow;
+use app\models\auth\UserRow;
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');

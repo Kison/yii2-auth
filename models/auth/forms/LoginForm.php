@@ -1,11 +1,10 @@
 <?php
 
-namespace app\models\forms;
+namespace app\models\auth\forms;
 
 use Yii;
-use app\models\EmailAuthRow;
 use yii\base\Model;
-use app\models\UserRow;
+use app\models\auth\{UserEmailRow, UserRow};
 
 /**
  * LoginForm is the model behind the login form.
@@ -24,7 +23,7 @@ class LoginForm extends Model {
         return [
             [['email', 'password'], 'required'],
             [['email'], 'email'],
-            [['email'], 'exist', 'targetClass' => EmailAuthRow::className(), 'targetAttribute' => 'user_email', 'message' => 'Incorrect username or password.'],
+            [['email'], 'exist', 'targetClass' => UserEmailRow::className(), 'targetAttribute' => 'user_email', 'message' => 'Incorrect username or password.'],
             ['password', 'validatePassword'],
         ];
     }
@@ -62,7 +61,7 @@ class LoginForm extends Model {
      */
     public function getUser() {
         if ($this->_user === false) {
-            $this->_user = EmailAuthRow::find()
+            $this->_user = UserEmailRow::find()
                 ->email($this->email)
                 ->one()
                 ->getUser()

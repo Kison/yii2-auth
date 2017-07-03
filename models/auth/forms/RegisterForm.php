@@ -1,13 +1,14 @@
 <?php
 
-namespace app\models\forms;
+namespace app\models\auth\forms;
 
-use app\models\UserRow;
 use Yii;
 use yii\base\Model;
 use app\components\validators\PasswordStrength;
-use app\models\EmailAuthRow;
-use yii\web\User;
+use app\models\auth\{
+    UserEmailRow, UserPasswordRow, UserRow
+};
+
 
 /** RegisterForm is the model behind the sign up form. */
 class RegisterForm extends Model {
@@ -20,7 +21,7 @@ class RegisterForm extends Model {
         return [
             [['email', 'password'], 'required'],
             [['email'], 'email'],
-            [['email'], 'unique', 'targetClass' => EmailAuthRow::className(), 'targetAttribute' => 'user_email'],
+            [['email'], 'unique', 'targetClass' => UserEmailRow::className(), 'targetAttribute' => 'user_email'],
             ['password', 'string', 'min' => 8],
             ['password', PasswordStrength::className()],
         ];
@@ -40,14 +41,18 @@ class RegisterForm extends Model {
             $user->setAttribute('login_method', UserRow::AUTH_EMAIL);
 
             if ($user->save()) {
-                // Create email auth row
-                $auth = new EmailAuthRow();
-                $auth->setAttribute('user_id', $user->getPrimaryKey());
-                $auth->setAttribute('user_email', $this->email);
-                $auth->setAttribute('user_password_hash', Yii::$app->getSecurity()
+                // Create email
+                $email = new UserEmailRow();
+                $email->setAttribute('user_id', $user->getPrimaryKey());
+                $email->setAttribute('user_email', $this->email);
+
+                // Create password
+                $password = new UserPasswordRow();
+                $password->setAttribute('user_id', $user->getPrimaryKey());
+                $password->setAttribute('user_password_hash', Yii::$app->getSecurity()
                     ->generatePasswordHash($this->password));
 
-                if ($auth->save()) {
+                if ($email->save() && $password->save()) {
                     $allowLogin = true;
                 }
             }

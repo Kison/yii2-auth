@@ -2,20 +2,19 @@
 
 use yii\db\Migration;
 
-/** Handles the creation of table `email_auth` */
-class m170628_115718_create_email_auth_table extends Migration {
+/** Handles the creation of table `user_password` */
+class m170628_115718_create_user_password_table extends Migration {
 
     /** @inheritdoc */
     public function up() {
-        $this->createTable('email_auth', [
+        $this->createTable('user_password', [
             'user_id'                   => $this->integer()->unique(),
-            'user_email'                => $this->string(50),
             'user_password_hash'        => $this->string(255),
         ]);
 
         $this->addForeignKey(
-            'fk-email_auth-user_id',
-            'email_auth',
+            'fk-user_password-user_id',
+            'user_password',
             'user_id',
             'users',
             'id',
@@ -26,10 +25,10 @@ class m170628_115718_create_email_auth_table extends Migration {
     /** @inheritdoc */
     public function down() {
         $this->dropForeignKey(
-            'fk-email_auth-user_id',
-            'email_auth'
+            'fk-user_password-user_id',
+            'user_password'
         );
 
-        $this->dropTable('email_auth');
+        $this->dropTable('user_password');
     }
 }
