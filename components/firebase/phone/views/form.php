@@ -33,11 +33,10 @@
         </div>
     </div>
 
-    <?= $form->field($widget->model, 'code', ['options' => ['class' => 'form-group phone-third-step hidden']])->textInput([
-        'class'         => 'form-control input-lg auth-border',
-        'placeholder'   => 'Enter the verification code you received by SMS',
-        'id'            => $widget->formId . '-code-input'
-    ])->label(false) ?>
+    <div class="form-group phone-third-step hidden">
+        <input type="text" id="<?= $widget->formId . '-code-input'?>" class="form-control input-lg auth-border" placeholder="Enter the verification code you received by SMS">
+        <p class="help-block help-block-error"></p>
+    </div>
 
     <div class="row phone-third-step hidden">
         <div class="col-md-12 mb-10px-width-less-then-1024px">

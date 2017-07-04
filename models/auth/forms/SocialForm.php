@@ -28,7 +28,7 @@ class SocialForm extends Model {
     public function rules() {
         return [
             [['via', 'user_name', 'firebase_user_id', 'firebase_access_token'], 'required'],
-            [['via'], 'in', 'range' => [UserRow::AUTH_FACEBOOK, UserRow::AUTH_TWITTER, UserRow::AUTH_PHONE]],
+            [['via'], 'in', 'range' => [UserRow::AUTH_FACEBOOK, UserRow::AUTH_TWITTER]],
             [['user_email'], 'email'],
             [['user_email'], 'string', 'max' => 50],
             [['user_name', 'firebase_user_id', 'firebase_access_token'], 'string', 'max' => 255]

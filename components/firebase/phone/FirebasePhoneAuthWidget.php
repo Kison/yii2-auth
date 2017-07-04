@@ -74,19 +74,18 @@ class FirebasePhoneAuthWidget extends Widget {
                                 
                                 $('.phone-second-step').addClass('hidden');
                                 $('.phone-third-step').removeClass('hidden');
-                                                                                                                                                                
-                                // SMS sent. Prompt user to type the code from the message, then sign the
-                                // user in with confirmationResult.confirm(code).
-                                                                
+                                                                                                                                                                                                                                                              
                                 $('#{$this->formId}-code-button').on('click', function() {                                        
                                     confirmationResult.confirm(getCodeFromUserInput()).then(function(result) {
                                         $('#{$this->formId}-code-button').off('click');                                                                                                                       
                                         var credential = firebase.auth.PhoneAuthProvider.credential(
                                             confirmationResult.verificationId, 
                                             getCodeFromUserInput()
-                                        );                                                                                                                   
-                                        {$this->onSuccess}
+                                        );
                                         
+                                        console.log(credential)
+                                                                                                                                               
+                                        {$this->onSuccess}                                        
                                     }).catch(function (error) {
                                         console.error('Error while checking the verification code', error);
                                         window.alert('Error while checking the verification code:'+ error.code + error.message);

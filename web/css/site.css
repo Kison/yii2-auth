@@ -132,3 +132,13 @@ a.desc:after {
         margin-bottom: 10px;
     }
 }
+
+.congrats-image {
+    width: 100%;
+    height: auto;
+}
+
+.congrats-image,
+.congrats-text {
+    opacity: 0;
+}

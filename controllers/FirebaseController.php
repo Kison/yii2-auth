@@ -36,6 +36,7 @@ class FirebaseController extends BaseAuthController {
 
         Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
         return [
+            'errors'    => $model->getFirstErrors(),
             'code'      => 200
         ];
     }
@@ -46,6 +47,13 @@ class FirebaseController extends BaseAuthController {
      */
     public function actionPhone() {
         $model = new PhoneForm();
+        $request = Yii::$app->request;
+
+        $model->setAttributes([
+            'firebase_access_token'         => $request->post('firebase_access_token'),
+            'firebase_user_id'              => $request->post('firebase_user_id'),
+            'phone'                         => $request->post('phone')
+        ]);
 
         if ($model->validate() && $model->authenticate()) {
             return $this->redirect('congrats');
@@ -53,6 +61,7 @@ class FirebaseController extends BaseAuthController {
 
         Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
         return [
+            'errors'    => $model->getFirstErrors(),
             'code'      => 200
         ];
     }

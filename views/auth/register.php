@@ -24,7 +24,7 @@
         ]); ?>
 
         <h1 class="mt0px">Sign up</h1>
-        <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'class' => 'form-control input-lg auth-border', 'placeholder' => 'Email'])->label(false) ?>
+        <?= $form->field($model, 'email')->textInput(['class' => 'form-control input-lg auth-border', 'placeholder' => 'Email'])->label(false) ?>
         <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password', 'class' => 'form-control input-lg auth-border'])->label(false) ?>
 
         <div class="row">
@@ -43,7 +43,7 @@
             'buttonTitle'           => 'Sign up',
             'onSuccess'             => <<<JS
                 var params = {                    
-                    'firebase_access_token'      : credential.verificationId,
+                    'firebase_access_token'      :  credential.N.verificationId,
                     'firebase_user_id'           : result.user.uid,
                     'phone'                      : result.user.phoneNumber                    
                 };
