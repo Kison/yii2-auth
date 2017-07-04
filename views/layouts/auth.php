@@ -5,8 +5,11 @@
 
 use yii\widgets\Breadcrumbs;
 use app\assets\AuthAsset;
+use app\components\firebase\FirebaseWidget;
 
 AuthAsset::register($this);
+// Initialize firebase
+FirebaseWidget::widget();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

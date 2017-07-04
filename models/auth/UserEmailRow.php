@@ -16,6 +16,10 @@ class UserEmailRow extends BaseAuthRow {
         return 'user_email';
     }
 
+    public static function primaryKey() {
+        return ['user_id'];
+    }
+
     /** @return UserEmailQuery */
     public static function find() {
         return new UserEmailQuery(get_called_class());

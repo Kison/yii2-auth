@@ -1,3 +1,11 @@
+
+/**
+ * Firebase sign in method
+ * @param {object} provider
+ * @param {string} providerName
+ * @param {function} onSuccess
+ * @param {function} onFail
+ */
 function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
     firebase.auth().signInWithPopup(provider).then(function(result) {
         console.log(result);
@@ -23,4 +31,27 @@ function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
         }
         console.log(error);
     });
+}
+
+/**
+ * Firebase sign out method
+ * @param {function} onSuccess
+ * @param {function} onFail
+ */
+function firebaseSingOut(onSuccess, onFail) {
+    var user = firebase.auth().currentUser;
+    if (user) {
+        firebase.auth().signOut().then(function() {
+            if (typeof(onSuccess) === 'function') {
+                onSuccess(this);
+            }
+            console.log(this);
+        }).catch(function(error) {
+            if (typeof(onFail) === 'function') {
+                onFail(error);
+            }
+            console.log(error);
+        });
+    }
+
 }

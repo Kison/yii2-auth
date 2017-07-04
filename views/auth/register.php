@@ -4,15 +4,14 @@
     use yii\bootstrap\ActiveForm;
     use rmrevin\yii\fontawesome\FA;
     use app\components\firebase\providers\{FirebaseFacebookAuthProvider, FirebaseTwitterAuthProvider};
-    use app\components\firebase\FirebaseWidget;
 
     /**
      * @var $this yii\web\View
      * @var $form yii\bootstrap\ActiveForm
      * @var $model app\models\auth\forms\RegisterForm
      */
-
-    $this->title = 'Sign up'
+    $this->title = 'Sign up';
+    $this->registerJsFile(Yii::getAlias('@web') . '/js/auth.js', ['depends' => [yii\web\JqueryAsset::className()]]);
 ?>
 
 <div class="row">
@@ -34,14 +33,31 @@
             </div>
         </div>
         <?php ActiveForm::end(); ?>
+
+        <?= \app\components\firebase\phone\FirebasePhoneAuthWidget::widget([
+            'buttonId'              => 'phone-auth-submit',
+            'formId'                => 'phone-auth-form',
+            'phoneInputId'          => 'firebase-phone-input',
+            'model'                 => new \app\models\auth\forms\PhoneForm(),
+            'title'                 => 'Sign up with phone',
+            'buttonTitle'           => 'Sign up',
+            'onSuccess'             => <<<JS
+                var params = {                    
+                    'firebase_access_token'      : credential.verificationId,
+                    'firebase_user_id'           : result.user.uid,
+                    'phone'                      : result.user.phoneNumber                    
+                };
+                            
+                $.post('firebase/phone', params, function(data) {
+                    console.log(data);
+                });
+JS
+        ]) ?>
     </div>
 </div>
 
 
 <?php
-    // Initialize firebase
-    FirebaseWidget::widget();
-
     // Facebook auth
     FirebaseAuthWidget::widget([
         'provider'          => new FirebaseFacebookAuthProvider(),
@@ -79,13 +95,23 @@
         ]) ?>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-2 phone-auth-button-wrapper">
         <?= Html::button(FA::i('phone'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'phone-sign-up-button',
+            'name'              => 'phone-auth-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign up with Phone'
+        ]) ?>
+    </div>
+
+    <div class="col-md-2 email-auth-button-wrapper hidden">
+        <?= Html::button(FA::i('envelope'), [
+            'class'             => 'btn btn-lg btn-default btn-block auth-border',
+            'name'              => 'email-auth-button',
+            'data-toggle'       => 'tooltip',
+            'data-placement'    => 'top',
+            'title'             => 'Sign up with Email'
         ]) ?>
     </div>
 </div>

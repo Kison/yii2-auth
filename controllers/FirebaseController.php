@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\auth\forms\PhoneForm;
 use yii;
 use app\models\auth\forms\SocialForm;
 use yii\web\{Controller, Response};
@@ -30,7 +31,7 @@ class FirebaseController extends BaseAuthController {
         ]);
 
         if ($model->validate() && $model->authenticate()) {
-            return $this->redirect('main/congrats');
+            return $this->redirect('congrats');
         }
 
         Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
@@ -44,6 +45,12 @@ class FirebaseController extends BaseAuthController {
      * @return Response|array
      */
     public function actionPhone() {
+        $model = new PhoneForm();
+
+        if ($model->validate() && $model->authenticate()) {
+            return $this->redirect('congrats');
+        }
+
         Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
         return [
             'code'      => 200

@@ -36,27 +36,35 @@ class SocialForm extends Model {
     }
 
     /**
-     * Creates user in database
-     * @return bool whether the user is sign up and sign in successfully
+     * Authenticate user in via social account
+     * @return bool whether the user is sign up|sign in successfully
      */
     public function authenticate() {
         $transaction = Yii::$app->db->beginTransaction();
 
+        $allowLogin = false;
         $user = null;
         try {
 
             // Checks whether user with such email exists or not
             if (($this->user_email && ($email = UserEmailRow::find()->email($this->user_email)->one())) ||
                 ($name = UserNameRow::findOne(['user_name' => $this->user_name, 'provider' => $this->via]))) {
-                /**@var UserEmailRow $email */
+                /**
+                 * @var UserEmailRow $email
+                 * @var UserNameRow $name
+                 * @var UserRow $user
+                 */
 
                 // Change auth type in user table
-                $user = $email->getUser();
+                $user = ($this->user_email && $email) ?
+                    $email->getUser()->one() : // Get user by email
+                    $name->getUser()->one(); // Get user by username
+
                 $user->setAttribute('login_method', $this->via);
                 if ($user->save(false, ['login_method'])) {
 
                     // Check whether firebase data exists
-                    if ($firebase = $user->getFirebaseRow()) {
+                    if ($firebase = FirebaseRow::findOne(['user_id' => $user->getPrimaryKey()])) {
                         // Update firebase related columns
                         $firebase->setAttribute('firebase_user_id', $this->firebase_user_id);
                         $firebase->setAttribute('firebase_access_token', $this->firebase_access_token);
@@ -69,7 +77,6 @@ class SocialForm extends Model {
                         $firebase->setAttribute('firebase_access_token', $this->firebase_access_token);
                         $firebase->save(false);
                     }
-
                 }
             } else {
 
@@ -102,12 +109,13 @@ class SocialForm extends Model {
                 }
             }
 
+            $allowLogin = true;
             $transaction->commit();
         } catch(\Exception $e) {
             $transaction->rollback();
         }
 
-        if ($user instanceof UserRow) {
+        if ($allowLogin && ($user instanceof UserRow)) {
             // 100 years
             return Yii::$app->user->login($user, UserRow::LOGIN_LIVE);
         }

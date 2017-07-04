@@ -16,4 +16,8 @@ class UserPhoneRow extends BaseAuthRow {
     public static function tableName() {
         return 'user_phone';
     }
+
+    public static function primaryKey() {
+        return ['user_id'];
+    }
 }

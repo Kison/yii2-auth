@@ -25,7 +25,7 @@
         $items[] = '<li>'
             . Html::beginForm(['/auth/logout'], 'post')
             . Html::submitButton(
-                'Logout',
+                'Sign out',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()

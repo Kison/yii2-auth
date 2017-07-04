@@ -4,11 +4,15 @@
      * @var $form yii\bootstrap\ActiveForm
      * @var $model app\models\auth\forms\LoginForm
      */
+    use app\components\firebase\FirebaseAuthWidget;
     use yii\helpers\Html;
     use yii\bootstrap\ActiveForm;
     use rmrevin\yii\fontawesome\FA;
+    use app\components\firebase\providers\{FirebaseFacebookAuthProvider, FirebaseTwitterAuthProvider};
 
-    $this->title = 'Sign in'
+    $this->title = 'Sign in';
+
+    $this->registerJsFile(Yii::getAlias('@web') . '/js/auth.js', ['depends' => [yii\web\JqueryAsset::className()]]);
 ?>
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
@@ -29,15 +33,51 @@
             </div>
         </div>
         <?php ActiveForm::end(); ?>
+
+        <?= \app\components\firebase\phone\FirebasePhoneAuthWidget::widget([
+            'buttonId'              => 'phone-auth-submit',
+            'formId'                => 'phone-auth-form',
+            'phoneInputId'          => 'firebase-phone-input',
+            'model'                 => new \app\models\auth\forms\PhoneForm(),
+            'title'                 => 'Sign in with phone',
+            'buttonTitle'           => 'Sign in',
+            'onSuccess'             => <<<JS
+                var params = {                    
+                    'firebase_access_token'      : credential.verificationId,
+                    'firebase_user_id'           : result.user.uid,
+                    'phone'                      : result.user.phoneNumber                    
+                };
+                            
+                $.post('firebase/phone', params, function(data) {
+                    console.log(data);
+                });
+JS
+        ]) ?>
     </div>
 </div>
+
+<?php
+    // Facebook auth
+    FirebaseAuthWidget::widget([
+        'provider'          => new FirebaseFacebookAuthProvider(),
+        'buttonSelector'    => '[name=\"facebook-sign-in-button\"]',
+        'action'            => FirebaseAuthWidget::ACTION_REGISTER
+    ]);
+
+    // Twitter auth
+    FirebaseAuthWidget::widget([
+        'provider'          => new FirebaseTwitterAuthProvider(),
+        'buttonSelector'    => '[name=\"twitter-sign-in-button\"]',
+        'action'            => FirebaseAuthWidget::ACTION_REGISTER
+    ]);
+?>
 
 <!-- Social and Phone login -->
 <div class="row">
     <div class="col-md-2 col-md-offset-3 mb-10px-width-less-then-1024px">
         <?= Html::button(FA::i('facebook'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'facebook-sign-in-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign in with Facebook'
@@ -47,20 +87,30 @@
     <div class="col-md-2 mb-10px-width-less-then-1024px">
         <?= Html::button(FA::i('twitter'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'twitter-sign-in-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign in with Twitter'
         ]) ?>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-2 phone-auth-button-wrapper">
         <?= Html::button(FA::i('phone'), [
             'class'             => 'btn btn-lg btn-default btn-block auth-border',
-            'name'              => 'sign-in-button',
+            'name'              => 'phone-auth-button',
             'data-toggle'       => 'tooltip',
             'data-placement'    => 'top',
             'title'             => 'Sign in with Phone'
+        ]) ?>
+    </div>
+
+    <div class="col-md-2 email-auth-button-wrapper hidden">
+        <?= Html::button(FA::i('envelope'), [
+            'class'             => 'btn btn-lg btn-default btn-block auth-border',
+            'name'              => 'email-auth-button',
+            'data-toggle'       => 'tooltip',
+            'data-placement'    => 'top',
+            'title'             => 'Sign in with Email'
         ]) ?>
     </div>
 </div>

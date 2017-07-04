@@ -14,4 +14,8 @@ class UserNameRow extends BaseAuthRow {
         return 'user_name';
     }
 
+    public static function primaryKey() {
+        return ['user_id', 'provider'];
+    }
+
 }

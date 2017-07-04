@@ -15,4 +15,8 @@ class FirebaseRow extends BaseAuthRow {
         return 'firebase';
     }
 
+    public static function primaryKey() {
+        return ['user_id'];
+    }
+
 }
