@@ -40,7 +40,7 @@
                 'buttonTitle'           => 'Sign in',
                 'model'                 => new \app\models\auth\forms\PhoneForm(),
                 'onSuccess'             => <<<JS
-                    user.getToken().then(function (token) {
+                    user.getIdToken().then(function (token) {
                         var params = {                    
                             'firebase_access_token'      : token,
                             'firebase_user_id'           : user.uid,

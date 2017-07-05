@@ -21,7 +21,7 @@ Set up on local machine
 3. Run  **```composer install```** from project root folder
 4. Run  **```php yii migrate```** from project root folder
 5. [Create google service account ](https://firebase.google.com/docs/admin/setup#add_firebase_to_your_app) and 
-   add place it contents into **```config/google.service.account.json```** 
+   put it contents into **```config/google.service.account.json```** 
 
    
 

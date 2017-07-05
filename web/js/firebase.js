@@ -10,8 +10,7 @@ function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
     firebase.auth().signInWithPopup(provider).then(function(result) {
         console.log(result);
 
-
-        result.user.getToken().then(function (token) {
+        result.user.getIdToken().then(function (token) {
             var params = {
                 'via' : providerName,
                 'firebase_access_token'      : token,
@@ -29,8 +28,52 @@ function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
             }
         });
 
-
     }).catch(function(error) {
+        // Link user to existing profile
+        if (error.code === "auth/account-exists-with-different-credential") {
+            var credential = error.credential,
+                email = error.email;
+
+            firebase.auth().fetchProvidersForEmail(email).then(function(providers) {
+                console.log(providers);
+                var provider,
+                    providerName;
+
+                if (providers[0] === 'facebook.com') {
+                    providerName = 'facebook';
+                    provider = new firebase.auth.FacebookAuthProvider();
+                }
+                if (providers[0] === 'twitter.com') {
+                    providerName = 'twitter';
+                    provider = new firebase.auth.TwitterAuthProvider();
+                }
+
+                if (typeof(provider) !== 'undefined') {
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                        result.user.linkWithCredential(credential).then(function() {
+                            result.user.getIdToken().then(function (token) {
+                                var params = {
+                                    'via' :  providerName,
+                                    'firebase_access_token'      : token,
+                                    'firebase_user_id'           : result.user.uid,
+                                    'user_email'                 : result.user.email,
+                                    'user_name'                  : result.user.displayName
+                                };
+
+                                $.post('firebase/social', params, function(data) {
+                                    console.log(data);
+                                });
+                            });
+                        });
+                    }).catch(function(error) {
+                        console.log(error);
+                    });
+                } else {
+                    alert("Something went wrong, please try again later!");
+                }
+            });
+        }
+
         if (typeof(onFail) === 'function') {
             onFail(error);
         }
@@ -58,5 +101,4 @@ function firebaseSingOut(onSuccess, onFail) {
             console.log(error);
         });
     }
-
 }

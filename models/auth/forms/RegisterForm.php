@@ -21,10 +21,25 @@ class RegisterForm extends Model {
         return [
             [['email', 'password'], 'required'],
             [['email'], 'email'],
-            [['email'], 'unique', 'targetClass' => UserEmailRow::className(), 'targetAttribute' => 'user_email'],
+            [['email'], 'emailUnique'],
             ['password', 'string', 'min' => 8],
             ['password', PasswordStrength::className()],
         ];
+    }
+
+    /**
+     * Validates the email.
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function emailUnique($attribute, $params) {
+        if (!$this->hasErrors()) {
+            if ($email = UserEmailRow::findOne(['user_email' => $this->email])) {
+                if (UserPasswordRow::find()->where(['user_id' => $email->getAttribute('user_id')])->exists()) {
+                    $this->addError($attribute, 'The email has already been taken');
+                }
+            }
+        }
     }
 
     /**
@@ -35,16 +50,12 @@ class RegisterForm extends Model {
         $transaction = Yii::$app->db->beginTransaction();
 
         $allowLogin = false;
+        $user = null;
         try {
-            // Create user
-            $user = new UserRow();
-            $user->setAttribute('login_method', UserRow::AUTH_EMAIL);
 
-            if ($user->save()) {
-                // Create email
-                $email = new UserEmailRow();
-                $email->setAttribute('user_id', $user->getPrimaryKey());
-                $email->setAttribute('user_email', $this->email);
+            if ($email = UserEmailRow::findOne(['user_email' => $this->email])) {
+                $user = $email->getUser()->one();
+                $user->setAttribute('login_method', UserRow::AUTH_EMAIL);
 
                 // Create password
                 $password = new UserPasswordRow();
@@ -52,17 +63,39 @@ class RegisterForm extends Model {
                 $password->setAttribute('user_password_hash', Yii::$app->getSecurity()
                     ->generatePasswordHash($this->password));
 
-                if ($email->save() && $password->save()) {
+                if ($user->save() && $password->save()) {
                     $allowLogin = true;
                 }
-            }
+            } else {
+                // Create user
+                $user = new UserRow();
+                $user->setAttribute('login_method', UserRow::AUTH_EMAIL);
 
+                if ($user->save()) {
+                    // Create email
+                    $email = new UserEmailRow();
+                    $email->setAttribute('user_id', $user->getPrimaryKey());
+                    $email->setAttribute('user_email', $this->email);
+                    $email->save();
+
+                    // Create password
+                    $password = new UserPasswordRow();
+                    $password->setAttribute('user_id', $user->getPrimaryKey());
+                    $password->setAttribute('user_password_hash', Yii::$app->getSecurity()
+                        ->generatePasswordHash($this->password));
+                    $password->save();
+
+                    if ($email->save() && $password->save()) {
+                        $allowLogin = true;
+                    }
+                }
+            }
             $transaction->commit();
         } catch(\Exception $e) {
             $transaction->rollback();
         }
 
-        if ($allowLogin) {
+        if ($allowLogin && $user) {
             // 100 years
             return Yii::$app->user->login($user, UserRow::LOGIN_LIVE);
         }
