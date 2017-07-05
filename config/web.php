@@ -4,8 +4,8 @@ use app\models\auth\UserRow;
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
-$routes = require(__DIR__ . './routes.php');
-$firebase = require(__DIR__ . './firebase.php');
+$routes = require(__DIR__ . '/routes.php');
+$firebase = require(__DIR__ . '/firebase.php');
 
 $config = [
     'id' => 'basic',
