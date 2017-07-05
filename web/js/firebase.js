@@ -8,8 +8,7 @@
  */
 function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
     firebase.auth().signInWithPopup(provider).then(function(result) {
-        console.log(result);
-
+        waitingDialog.show('Loading...');
         result.user.getIdToken().then(function (token) {
             var params = {
                 'via' : providerName,
@@ -51,6 +50,7 @@ function firebaseAuthentication(provider, providerName, onSuccess, onFail) {
                 if (typeof(provider) !== 'undefined') {
                     firebase.auth().signInWithPopup(provider).then(function(result) {
                         result.user.linkWithCredential(credential).then(function() {
+                            waitingDialog.show('Loading...');
                             result.user.getIdToken().then(function (token) {
                                 var params = {
                                     'via' :  providerName,
@@ -93,7 +93,7 @@ function firebaseSingOut(onSuccess, onFail) {
             if (typeof(onSuccess) === 'function') {
                 onSuccess(this);
             }
-            console.log(this);
+            console.log('Sign out', this);
         }).catch(function(error) {
             if (typeof(onFail) === 'function') {
                 onFail(error);

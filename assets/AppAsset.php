@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle {
 
     public $js = [
         'js/scripts.js',
+        'js/waiting.js',
     ];
 
     public $depends = [

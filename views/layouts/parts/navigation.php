@@ -23,7 +23,7 @@
 
     if (!Yii::$app->user->isGuest) {
         $items[] = '<li>'
-            . Html::beginForm(['/auth/logout'], 'post')
+            . Html::beginForm(['/auth/logout'], 'post', ['id' => 'sign-out-form'])
             . Html::submitButton(
                 'Sign out',
                 ['class' => 'btn btn-link logout']

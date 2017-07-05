@@ -59,6 +59,7 @@ $(function () {
 
                 codeButtonElement.one('click', function() {
                     confirmationResult.confirm(getCodeFromUserInput()).then(function(result) {
+                        waitingDialog.show('Loading...');
                         $(document).trigger("firebase:phoneVerified", [result.user]);
                     }).catch(function (error) {
                         console.log(error);
