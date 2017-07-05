@@ -7,3 +7,4 @@ tests/_output/*
 tests/_support/_generated
 config/db.php
 config/firebase.php
+config/firebase/google.service.account.json

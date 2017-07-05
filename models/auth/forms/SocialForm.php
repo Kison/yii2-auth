@@ -2,8 +2,10 @@
 
 namespace app\models\auth\forms;
 
+use app\helpers\AppHelper;
 use Yii;
 use yii\base\Model;
+use app\components\validators\FirebaseToken;
 use app\models\auth\{
     FirebaseRow, UserNameRow, UserRow, UserEmailRow
 };
@@ -31,7 +33,11 @@ class SocialForm extends Model {
             [['via'], 'in', 'range' => [UserRow::AUTH_FACEBOOK, UserRow::AUTH_TWITTER]],
             [['user_email'], 'email'],
             [['user_email'], 'string', 'max' => 50],
-            [['user_name', 'firebase_user_id', 'firebase_access_token'], 'string', 'max' => 255]
+            [['user_name', 'firebase_user_id'], 'string', 'max' => 255],
+            [['firebase_access_token'], FirebaseToken::className(),
+                'pid'           => AppHelper::getFirebase()->projectId,
+                'uid'           => Yii::$app->request->post('firebase_user_id')
+            ]
         ];
     }
 

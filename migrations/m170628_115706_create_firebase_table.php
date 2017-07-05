@@ -10,7 +10,7 @@ class m170628_115706_create_firebase_table extends Migration {
         $this->createTable('firebase', [
             'user_id'                   => $this->integer()->unique(),
             'firebase_user_id'          => $this->string(255)->notNull(),
-            'firebase_access_token'     => $this->string(255)->notNull(),
+            'firebase_access_token'     => $this->text()->notNull(),
         ]);
 
         $this->addForeignKey(

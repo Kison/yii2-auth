@@ -4,6 +4,10 @@ namespace app\models\auth\forms;
 
 use Yii;
 use yii\base\Model;
+use app\components\validators\FirebaseToken;
+use app\helpers\AppHelper;
+use Kreait\Firebase;
+use Kreait\Firebase\ServiceAccount;
 use app\models\auth\{
     FirebaseRow, UserNameRow, UserPhoneRow, UserRow, UserEmailRow
 };
@@ -24,8 +28,12 @@ class PhoneForm extends Model {
     public function rules() {
         return [
             [['phone', 'firebase_user_id', 'firebase_access_token'], 'required'],
-            [['firebase_user_id', 'firebase_access_token'], 'string', 'max' => 255],
-            [['phone'], 'match', 'pattern' => '/\+[0-9\s\-\(\)]+/']
+            [['firebase_user_id'], 'string', 'max' => 255],
+            [['phone'], 'match', 'pattern' => '/\+[0-9\s\-\(\)]+/'],
+            [['firebase_access_token'], FirebaseToken::className(),
+                'pid'           => AppHelper::getFirebase()->projectId,
+                'uid'           => Yii::$app->request->post('firebase_user_id')
+            ]
         ];
     }
 

@@ -34,25 +34,26 @@
         </div>
         <?php ActiveForm::end(); ?>
 
-        <?= \app\components\firebase\phone\FirebasePhoneAuthWidget::widget([
-            'buttonId'              => 'phone-auth-submit',
-            'formId'                => 'phone-auth-form',
-            'phoneInputId'          => 'firebase-phone-input',
-            'model'                 => new \app\models\auth\forms\PhoneForm(),
-            'title'                 => 'Sign up with phone',
-            'buttonTitle'           => 'Sign up',
-            'onSuccess'             => <<<JS
-                var params = {                    
-                    'firebase_access_token'      :  credential.N.verificationId,
-                    'firebase_user_id'           : result.user.uid,
-                    'phone'                      : result.user.phoneNumber                    
-                };
-                            
-                $.post('firebase/phone', params, function(data) {
-                    console.log(data);
-                });
+        <div id="phone-widget-wrapper" class="hidden">
+            <?= \app\components\firebase\phone\FirebasePhoneAuthWidget::widget([
+                'title'                 => 'Sign up with phone',
+                'buttonTitle'           => 'Sign up',
+                'model'                 => new \app\models\auth\forms\PhoneForm(),
+                'onSuccess'             => <<<JS
+                    user.getToken().then(function (token) {
+                        var params = {                    
+                            'firebase_access_token'      : token,
+                            'firebase_user_id'           : user.uid,
+                            'phone'                      : user.phoneNumber                    
+                        };
+                                
+                        $.post('firebase/phone', params, function(data) {
+                            console.log(data);
+                        });
+                    });                                                   
 JS
-        ]) ?>
+            ]) ?>
+        </div>
     </div>
 </div>
 
